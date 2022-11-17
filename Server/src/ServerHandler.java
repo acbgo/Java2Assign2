@@ -10,21 +10,24 @@ public class ServerHandler extends Thread {
 
     public Socket socket;
     public ConcurrentHashMap<String, Socket> clients;
-    ConcurrentHashMap<String, String> matches;
+    public ConcurrentHashMap<String, String> matches;
+    public ConcurrentHashMap<DataInputStream, PrintStream> input_print;
     public DataInputStream dataInputStream;
     public PrintStream printStream;
 
     public boolean can_match = false;
 
-    public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches) {
+    public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches, ConcurrentHashMap<DataInputStream, PrintStream> input_print) {
         if (socket != null) {
             System.out.println("new client connected");
             try {
                 this.socket = socket;
                 this.clients = clients;
                 this.matches = matches;
+                this.input_print = input_print;
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 printStream = new PrintStream(socket.getOutputStream());
+                input_print.put(dataInputStream, printStream);
                 start();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -91,6 +94,32 @@ public class ServerHandler extends Thread {
                         String msg = "position:" + data.substring(9,12) + "1";
                         op_print.println(msg);
                         printStream.println("1");
+                    }
+                } else if (data.startsWith("status")) {
+                    if (data.charAt(7) == '0'){
+                        System.out.println("tie");
+                        printStream.println("tie");
+                        String cur_player = data.substring(8);
+                        String opponent = matches.get(cur_player);
+                        Socket op_socket = clients.get(opponent);
+                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
+                        op_print.println("tie");
+                    } else if (data.charAt(7) == '1') {
+                        String cur_player = data.substring(8);
+                        System.out.println(cur_player + " win!");
+                        printStream.println("you win!");
+                        String opponent = matches.get(cur_player);
+                        Socket op_socket = clients.get(opponent);
+                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
+                        op_print.println("you lose...");
+                    } else if (data.startsWith("-1", 7)) {
+                        String cur_player = data.substring(8);
+                        String opponent = matches.get(cur_player);
+                        System.out.println(opponent + " win!");
+                        printStream.println("you lose...");
+                        Socket op_socket = clients.get(opponent);
+                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
+                        op_print.println("you win!");
                     }
                 }
             }

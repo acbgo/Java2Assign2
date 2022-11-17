@@ -17,12 +17,14 @@ import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
 public class Controller implements Initializable {
-    private static final int PLAY_1 = 1;
-    private static final int PLAY_2 = 2;
+    private static final int PLAY_1 = 1;//circle
+    private static final int PLAY_2 = 2;//line
     private static final int EMPTY = 0;
     private static final int BOUND = 90;
     private static final int OFFSET = 15;
-    private int[] position = {0, 0};
+
+    int which_player = 0;
+    int win_player = -1;
     public boolean my_turn = false;
 
     private Socket socket;
@@ -131,6 +133,75 @@ public class Controller implements Initializable {
         player_name = n;
     }
 
+    public int check_winner(int[][] chessBoard){
+        System.out.println("check winner");
+        //first col
+        if (check_triple_equality(chessBoard[0][0],chessBoard[0][1],chessBoard[0][2])){
+            return chessBoard[0][0];
+        }
+        //second col
+        if (check_triple_equality(chessBoard[1][0],chessBoard[1][1],chessBoard[1][2])){
+            return chessBoard[1][0];
+        }
+        //third col
+        if (check_triple_equality(chessBoard[2][0],chessBoard[2][1],chessBoard[2][2])){
+            return chessBoard[2][0];
+        }
+
+        //first row
+        if (check_triple_equality(chessBoard[0][0],chessBoard[1][0],chessBoard[2][0])){
+            return chessBoard[0][0];
+        }
+        //second row
+        if (check_triple_equality(chessBoard[0][1],chessBoard[1][1],chessBoard[2][1])){
+            return chessBoard[0][1];
+        }
+        //third row
+        if (check_triple_equality(chessBoard[0][2],chessBoard[1][2],chessBoard[2][2])){
+            return chessBoard[0][2];
+        }
+
+        //main diagonal
+        if (check_triple_equality(chessBoard[0][0],chessBoard[1][1],chessBoard[2][2])){
+            return chessBoard[0][2];
+        }
+        if (check_triple_equality(chessBoard[2][0],chessBoard[1][1],chessBoard[0][2])){
+            return chessBoard[0][2];
+        }
+        if (is_end(flag) && win_player == -1){
+            return 0;
+        }
+        return -1;
+    }
+
+    private boolean check_triple_equality(int p1, int p2, int p3){
+        return (p1 == p2) && (p2 == p3) && (p1 != 0);
+    }
+
+    public boolean is_end(boolean[][] flag){
+        System.out.println("check end");
+        for (int i = 0; i < flag.length; i++) {
+            for (int j = 0; j < flag[0].length; j++) {
+                if (!flag[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void send_status(){
+        if (win_player != -1 ){
+            if (win_player == which_player){
+                printStream.println("status:1"+player_name);
+            } else if (win_player == 0) {
+                printStream.println("status:0"+player_name);
+            } else {
+                printStream.println("status:-1"+player_name);
+            }
+        }
+    }
+
     public void start() {
         new Thread(() -> {
             try {
@@ -146,6 +217,10 @@ public class Controller implements Initializable {
                                 System.out.println("this not your turn");
                             }
                         });
+                        Thread.sleep(100);
+                        win_player = check_winner(chessBoard);
+                        System.out.println(win_player);
+                        send_status();
                     } else if (data.equals("0")) {
                         System.out.println("this not your turn");
                     } else if (data.startsWith("position:")) {
@@ -157,16 +232,23 @@ public class Controller implements Initializable {
                                 refreshBoard(x, y);
                                 TURN = !TURN;
                             });
+                            Thread.sleep(100);
+                            win_player = check_winner(chessBoard);
+                            System.out.println(win_player);
+                            send_status();
                         }
                     } else if (data.startsWith("your")) {
                         my_turn = true;
                         TURN = false;
+                        which_player = 2;
                     } else {
                         System.out.println(data);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }).start();
     }
