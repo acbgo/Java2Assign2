@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51ebb24b-d8ca-47b7-832c-09b019bd9786" name="Changes" comment="" />
+    <list default="true" id="4af548b8-f223-4b3d-b29d-8e89d1a4030f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/controller/Controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/mainUI.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/mainUI.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/resources/mainUI.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/Client/resources/mainUI.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/src/application/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/src/application/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Assignment2/src/application/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/src/application/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/CS209_Java2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/CS209_Java2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -13,52 +30,71 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2GyVh6wIc94dzTr3Pplb4T1EGRP" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="2HcKmY73XllL1vTFFdVo10ENk1c" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "project.structure.last.edited": "Modules",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "E:/OneDrive - 南方科技大学/大学/4 大三上/2 课程/4 Java2/3 assignment/assignment2/TCP_Chat_Room-master",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="application.Main" />
-      <module name="Assignment2" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="application.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.MainApp_Client">
+    <configuration name="MainApp_Client" type="Application" factoryName="Application" singleton="false" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="MainApp" />
+      <module name="Client" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MainApp_Server" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="MainApp" />
+      <module name="Server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.MainApp_Client" />
+      <item itemvalue="Application.MainApp_Server" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.MainApp_Client" />
+        <item itemvalue="Application.MainApp_Server" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="51ebb24b-d8ca-47b7-832c-09b019bd9786" name="Changes" comment="" />
-      <created>1667360928349</created>
+      <changelist id="4af548b8-f223-4b3d-b29d-8e89d1a4030f" name="Changes" comment="" />
+      <created>1668579092496</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1667360928349</updated>
-      <workItem from="1667360929652" duration="327000" />
+      <updated>1668579092496</updated>
+      <workItem from="1668579094013" duration="5776000" />
+      <workItem from="1668611128350" duration="621000" />
+      <workItem from="1668657857903" duration="856000" />
     </task>
     <servers />
   </component>
