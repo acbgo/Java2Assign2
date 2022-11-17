@@ -7,6 +7,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -15,6 +16,7 @@ public class Controller implements Initializable {
     private static final int EMPTY = 0;
     private static final int BOUND = 90;
     private static final int OFFSET = 15;
+    private static int[] position = {0, 0};
 
     @FXML
     private Pane base_square;
@@ -22,6 +24,7 @@ public class Controller implements Initializable {
     @FXML
     private Rectangle game_panel;
 
+    private static boolean click = false;
     private static boolean TURN = false;
 
     private static final int[][] chessBoard = new int[3][3];
@@ -33,6 +36,10 @@ public class Controller implements Initializable {
             int x = (int) (event.getX() / BOUND);
             int y = (int) (event.getY() / BOUND);
             if (refreshBoard(x, y)) {
+//                System.out.println("click");
+                position[0] = x;
+                position[1] = y;
+                click = true;
                 TURN = !TURN;
             }
         });
@@ -99,5 +106,13 @@ public class Controller implements Initializable {
         line_b.setEndY((j + 1) * BOUND + OFFSET * 0.5);
         line_b.setStroke(Color.BLUE);
         flag[i][j] = true;
+    }
+
+    public static int[] getPosition(){
+        click = false;
+        return position;
+    }
+    public static boolean getClick(){
+        return click;
     }
 }

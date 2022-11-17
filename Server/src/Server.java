@@ -9,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server {
 
     public ServerSocket myServerSocket;
-    public HashMap hashMap;
+    public ConcurrentHashMap<String, Socket> clients = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, String> matches = new ConcurrentHashMap<>();
     public Server() {
         startConnection();
     }
@@ -20,8 +21,9 @@ public class Server {
             System.out.println("server started: <http://127.0.0.1:8088>\n");
             while (true){
                 Socket socket = myServerSocket.accept();
-                System.out.println(socket.getPort());
-                new ServerHandler(socket, hashMap);
+                new ServerHandler(socket, clients,matches);
+                System.out.println(clients);
+                System.out.println(matches);
             }
         } catch (IOException e) {
             e.printStackTrace();
