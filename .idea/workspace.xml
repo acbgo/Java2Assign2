@@ -58,7 +58,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainApp_Client">
+  <component name="RunManager" selected="Application.MainApp_Server">
     <configuration name="MainApp_Client" type="Application" factoryName="Application" singleton="false" temporary="true">
       <option name="MAIN_CLASS_NAME" value="MainApp" />
       <module name="Client" />
@@ -94,7 +94,7 @@
       <updated>1668579092496</updated>
       <workItem from="1668579094013" duration="5776000" />
       <workItem from="1668611128350" duration="621000" />
-      <workItem from="1668657857903" duration="856000" />
+      <workItem from="1668657857903" duration="1637000" />
     </task>
     <servers />
   </component>

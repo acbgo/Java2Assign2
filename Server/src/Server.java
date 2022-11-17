@@ -18,23 +18,11 @@ public class Server {
         try {
             myServerSocket = new ServerSocket(8088);
             System.out.println("server started: <http://127.0.0.1:8088>\n");
-
-            
-            new Thread(() -> {
-                try {
-                    while (true){
-                        Socket socket = myServerSocket.accept();
-                        System.out.println(socket.getPort());
-                        new ServerHandler(socket, hashMap);
-                    }
-                } catch (Exception e){
-                    try {
-                        myServerSocket.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }).start();
+            while (true){
+                Socket socket = myServerSocket.accept();
+                System.out.println(socket.getPort());
+                new ServerHandler(socket, hashMap);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

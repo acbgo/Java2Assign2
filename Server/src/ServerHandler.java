@@ -5,10 +5,10 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ServerHandler extends Thread {
+public class ServerHandler implements Runnable {
 
     public Socket socket;
-    public HashMap hashMap;
+    //    public HashMap hashMap;
     public DataInputStream dataInputStream;
     public PrintStream printStream;
 
@@ -17,7 +17,7 @@ public class ServerHandler extends Thread {
             System.out.println("client connected");
             try {
                 this.socket = socket;
-                this.hashMap = hashMap;
+//                this.hashMap = hashMap;
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 printStream = new PrintStream(socket.getOutputStream());
                 run();
@@ -30,17 +30,15 @@ public class ServerHandler extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                String data = dataInputStream.readLine();
-                System.out.println("data:" + data);
-                if (data.startsWith("name")) {
-                    System.out.println("connect to " + data.substring(6));
-                    printStream.println("connect to " + data.substring(6));
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        try {
+            String data = dataInputStream.readLine();
+            System.out.println("data:" + data);
+            if (data.startsWith("name")) {
+                System.out.println("connect to " + data.substring(6));
+                printStream.println("connect to " + data.substring(6));
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
