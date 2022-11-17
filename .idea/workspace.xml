@@ -11,6 +11,24 @@
       <change beforePath="$PROJECT_DIR$/../Assignment2/src/application/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/src/application/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../labs/CS209_Java2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/CS209_Java2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../labs/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/src/main/java/others/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/src/main/java/others/test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/classes/others/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../labs/target/classes/others/test.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_MyState_jmhType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_MyState_jmhType_B1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_MyState_jmhType_B2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_MyState_jmhType_B3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_jmhType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_jmhType_B1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_jmhType_B2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_jmhType_B3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_testarray_jmhTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_testarraylist_jmhTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_testintmap_jmhTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/lab2/jmh_generated/Practice2_testlinkedlist_jmhTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/test/jmh_generated/Practice2_MyState_jmhType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/test/jmh_generated/Practice2_MyState_jmhType_B1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/test/jmh_generated/Practice2_MyState_jmhType_B2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../labs/target/generated-sources/annotations/test/jmh_generated/Practice2_MyState_jmhType_B3.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +112,7 @@
       <updated>1668579092496</updated>
       <workItem from="1668579094013" duration="5776000" />
       <workItem from="1668611128350" duration="621000" />
-      <workItem from="1668657857903" duration="7773000" />
+      <workItem from="1668657857903" duration="21138000" />
     </task>
     <servers />
   </component>
@@ -111,5 +129,12 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" suspend="THREAD" type="java-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -8,14 +8,18 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            new Client();
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getClassLoader().getResource("mainUI.fxml"));
             Pane root = fxmlLoader.load();
-            stage.setTitle("Tic Tac Toe Server");
+            Controller controller = fxmlLoader.getController();
+
+            Client client = new Client(controller);
+
+            stage.setTitle("Tic Tac Toe Server" + client.name);
             stage.setScene(new Scene(root));
             stage.setResizable(false);
             stage.show();
+
         } catch (Exception e){
             e.printStackTrace();
         }
