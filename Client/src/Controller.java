@@ -23,6 +23,7 @@ public class Controller implements Initializable {
     private static final int BOUND = 90;
     private static final int OFFSET = 15;
     private int[] position = {0, 0};
+    public boolean my_turn = false;
 
     private Socket socket;
     public static DataInputStream dataInputStream;
@@ -36,7 +37,7 @@ public class Controller implements Initializable {
     @FXML
     private Rectangle game_panel;
 
-    private boolean init = true;
+    //ture -> circle; false -> line
     private static boolean TURN = false;
 
     private static final int[][] chessBoard = new int[3][3];
@@ -50,7 +51,7 @@ public class Controller implements Initializable {
         game_panel.setOnMouseClicked(event -> {
             x_axis = (int) (event.getX() / BOUND);
             y_axis = (int) (event.getY() / BOUND);
-            String msg = "position:" + x_axis + "," + y_axis + "by " + player_name;
+            String msg = "position:" + x_axis + "," + y_axis + "by " + player_name + (my_turn ? 1 : 0);
             printStream.println(msg);
         });
     }
@@ -119,14 +120,6 @@ public class Controller implements Initializable {
         flag[i][j] = true;
     }
 
-//    //these two methods can not be static, in order to be invoked by client.
-//    public int[] getPosition(){
-//        click = false;
-//        return position;
-//    }
-//    public boolean getClick(){
-//        return click;
-//    }
 
     public void setSocket(Socket s) throws IOException {
         socket = s;
@@ -138,43 +131,41 @@ public class Controller implements Initializable {
         player_name = n;
     }
 
-    public void callback(){
-        if (refreshBoard(x_axis, y_axis)) {
-            TURN = !TURN;
-        }
-    }
-    public void callback(int x, int y){
-        refreshBoard(x, y);
-    }
-
-    public void start(){
+    public void start() {
         new Thread(() -> {
             try {
                 while (true) {
-//                if (init) {
-//                    //sleep的原因是一开始变量尚未赋值，但是线程已开启
-//                    TimeUnit.MILLISECONDS.sleep(500);
-//                    init = false;
-//                }
                     String data = dataInputStream.readLine();
                     if (data.equals("1")) {
                         Platform.runLater(() -> {
-                            if (refreshBoard(x_axis, y_axis)) {
+                            if (my_turn) {
+                                refreshBoard(x_axis, y_axis);
                                 TURN = !TURN;
+                                my_turn = false;
+                            } else {
+                                System.out.println("this not your turn");
                             }
                         });
+                    } else if (data.equals("0")) {
+                        System.out.println("this not your turn");
                     } else if (data.startsWith("position:")) {
                         int x = Integer.parseInt(data.substring(9, 10));
                         int y = Integer.parseInt(data.substring(11, 12));
-                        Platform.runLater(() -> {
-                            refreshBoard(x, y);
-                            TURN = !TURN;
-                        });
+                        if (data.endsWith("1")){
+                            my_turn = true;
+                            Platform.runLater(() -> {
+                                refreshBoard(x, y);
+                                TURN = !TURN;
+                            });
+                        }
+                    } else if (data.startsWith("your")) {
+                        my_turn = true;
+                        TURN = false;
                     } else {
                         System.out.println(data);
                     }
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();

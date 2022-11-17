@@ -13,6 +13,7 @@ public class Client {
 
     public String name;
 
+
     private Controller controller;
 
     public Client(Controller controller) {

@@ -47,6 +47,9 @@ public class ServerHandler extends Thread {
                         matches.put(name, "");
                     }
                     clients.put(name, this.socket);
+                    if (clients.size()%2 != 0){
+                        printStream.println("your turn");
+                    }
                     if (clients.size()>1){
                         for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
                             Map.Entry entry = (Map.Entry) socketStringEntry;
@@ -77,12 +80,15 @@ public class ServerHandler extends Thread {
                     if (clients.size() == 1) {
                         System.out.println("waiting....");
                         printStream.println("waiting....");
+                    } else if (data.endsWith("0")) {
+                        System.out.println("this is not his turn");
+                        printStream.println("0");
                     } else {
-                        String cur_player = data.substring(15);
+                        String cur_player = data.substring(15, data.length()-1);
                         String opponent = matches.get(cur_player);
                         Socket op_socket = clients.get(opponent);
                         PrintStream op_print = new PrintStream(op_socket.getOutputStream());
-                        String msg = "position:" + data.substring(9,12);
+                        String msg = "position:" + data.substring(9,12) + "1";
                         op_print.println(msg);
                         printStream.println("1");
                     }
