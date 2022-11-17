@@ -14,6 +14,8 @@ public class ServerHandler extends Thread {
     public DataInputStream dataInputStream;
     public PrintStream printStream;
 
+    public boolean can_match = false;
+
     public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches) {
         if (socket != null) {
             System.out.println("new client connected");
@@ -49,15 +51,24 @@ public class ServerHandler extends Thread {
                         for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
                             Map.Entry entry = (Map.Entry) socketStringEntry;
                             if (entry.getValue().equals("")) {
+                                String match_name = (String)entry.getKey();
+                                if (name.equals(match_name)){
+                                    continue;
+                                }
                                 matches.put((String) entry.getKey(), name);
                                 matches.put(name, (String) entry.getKey());
+                                can_match = true;
                             }
                         }
-                        String match_to = matches.get(name);
-                        Socket match_socket = clients.get(match_to);
-                        PrintStream match_ps = new PrintStream(match_socket.getOutputStream());
-                        match_ps.println("match to " + name);
-                        printStream.println("match to " + match_to);
+                        if (can_match){
+                            String match_to = matches.get(name);
+                            Socket match_socket = clients.get(match_to);
+                            PrintStream match_ps = new PrintStream(match_socket.getOutputStream());
+                            match_ps.println("match to " + name);
+                            printStream.println("match to " + match_to);
+                        } else {
+                            matches.put(name, "");
+                        }
                     } else {
                         System.out.println("waiting....");
                         printStream.println("waiting....");

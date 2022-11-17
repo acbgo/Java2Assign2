@@ -27,6 +27,7 @@ public class Server {
                         Thread.sleep(500);
                         System.out.println(clients);
                         System.out.println(matches);
+                        System.out.println();
                     }
                 } catch (Exception e){
                     try {
