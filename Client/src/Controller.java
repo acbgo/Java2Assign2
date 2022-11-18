@@ -16,9 +16,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 public class Controller implements Initializable {
     private static final int PLAY_1 = 1;//circle

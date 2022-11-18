@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4af548b8-f223-4b3d-b29d-8e89d1a4030f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../tic_tac_toe_maven/Client/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../tic_tac_toe_maven/Server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/controller/Controller.class" beforeDir="false" />
@@ -56,22 +61,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/OneDrive - 南方科技大学/大学/4 大三上/2 课程/4 Java2/3 assignment/assignment2/TCP_Chat_Room-master&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "last_opened_file_path": "E:/OneDrive - 南方科技大学/code/CS209_Java2/assignments/tic_tac_toe/Server/src",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\OneDrive - 南方科技大学\code\CS209_Java2\assignments\tic_tac_toe\Server\src" />
+      <recent name="E:\OneDrive - 南方科技大学\code\CS209_Java2\assignments\tic_tac_toe\Client\src" />
+      <recent name="E:\OneDrive - 南方科技大学\code\CS209_Java2\assignments\tic_tac_toe\Client\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\OneDrive - 南方科技大学\code\CS209_Java2\assignments\tic_tac_toe\Client\resources" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="" />
     </key>
