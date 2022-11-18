@@ -72,7 +72,7 @@ public class Controller implements Initializable {
     }
 
     public void restart(){
-        TURN = !TURN;
+        TURN = false;
         System.out.println("click restart");
         for (int i = 0; i < chessBoard.length; i++) {
             for (int j = 0; j < chessBoard[0].length; j++) {
@@ -208,9 +208,11 @@ public class Controller implements Initializable {
                         printStream.println(data);
                     } else if (data.equals("op_shutdown")) {
                         printStream.println(data);
+                        System.exit(0);
                     } else if (data.equals("op_restart")) {
                         Platform.runLater(this::restart);
                         op_click = true;
+                        my_turn = false;
                     } else {
                         System.out.println(data);
                     }
