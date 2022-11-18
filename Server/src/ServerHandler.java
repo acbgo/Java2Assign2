@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerHandler extends Thread {
@@ -47,23 +46,25 @@ public class ServerHandler extends Thread {
         }
     }
 
-    public void auto_match() throws IOException {
-        for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
-            Map.Entry entry = (Map.Entry) socketStringEntry;
-            if (entry.getValue().equals("")) {
-                String match_name = (String)entry.getKey();
-                if (name.equals(match_name)){
-                    continue;
-                }
-                op_name = (String) entry.getKey();
-                matches.put(op_name, name);
-                matches.put(name, op_name);
-                can_match = true;
-                Socket op_socket = clients.get(op_name);
-                PrintStream op_ps = new PrintStream(op_socket.getOutputStream());
-                op_ps.println("op_name:" + name);
-            }
-        }
+    public void match() throws IOException {
+        matches.put(op_name, name);
+        matches.put(name, op_name);
+        can_match = true;
+        Socket op_socket = clients.get(op_name);
+        System.out.println(op_name);
+        PrintStream op_ps = new PrintStream(op_socket.getOutputStream());
+        op_ps.println("op_name:" + name);
+
+//        for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
+//            Map.Entry entry = (Map.Entry) socketStringEntry;
+//            if (entry.getValue().equals("")) {
+//                String match_name = (String)entry.getKey();
+//                if (name.equals(match_name)){
+//                    continue;
+//                }
+//                op_name = (String) entry.getKey();
+//            }
+//        }
     }
     public void send_match_msg() throws IOException {
         String match_to = matches.get(name);
@@ -204,6 +205,18 @@ public class ServerHandler extends Thread {
         }
     }
 
+    public void update(){
+        String msg = "list:";
+        for (String s : clients.keySet()){
+            if (!s.equals(name)){
+                msg += s + ",";
+            }
+        }
+        msg = msg.substring(0, msg.length()-1);
+        System.out.println(msg);
+        printStream.println(msg);
+    }
+
     @Override
     public void run() {
         try {
@@ -227,12 +240,7 @@ public class ServerHandler extends Thread {
                         op_number = 2;
                     }
                     if (clients.size()>1){
-                        auto_match();
-                        if (can_match){
-                            send_match_msg();
-                        } else {
-                            matches.put(name, "");
-                        }
+                        update();
                     } else {
                         System.out.println("waiting....");
                         printStream.println("waiting....");
@@ -281,6 +289,16 @@ public class ServerHandler extends Thread {
                     restart();
                     System.out.println(name);
                     print_board();
+                } else if (data.startsWith("match:")) {
+                    op_name = data.substring(6);
+                    System.out.println("before match: " + op_name);
+                    System.out.println(clients);
+                    match();
+                    if (can_match){
+                        send_match_msg();
+                    } else {
+                        matches.put(name, "");
+                    }
                 } else if (game_end) {
                     System.out.println("The game is over");
                     printStream.println("The game is over.");

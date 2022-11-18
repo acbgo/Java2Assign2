@@ -1,8 +1,13 @@
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -15,7 +20,10 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -41,7 +49,13 @@ public class Controller implements Initializable {
     private Rectangle game_panel;
 
     @FXML
+    private ListView list;
+
+    @FXML
     private Button button;
+
+    @FXML
+    private Button history;
 
     //ture -> circle; false -> line
     private static boolean TURN = false;
@@ -55,6 +69,17 @@ public class Controller implements Initializable {
     public int x_axis;
     public int y_axis;
 
+    Statement statement;
+    Connection con;
+    {
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tic_tac_toe?characterEncoding=UTF8&autoReconnect=true&useSSL=false");
+            statement = con.createStatement();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,6 +91,29 @@ public class Controller implements Initializable {
         });
         button.setOnMouseClicked(mouseEvent -> {
             restart();
+        });
+        history.setOnMouseClicked(mouseEvent -> {
+            int total = 0, win = 0, lose = 0, tie = 0;
+            String sql = "select * from record where name = " + player_name;
+            ResultSet resultSet = null;
+            try {
+                resultSet = statement.executeQuery(sql);
+                while (resultSet.next()){
+                    total = resultSet.getInt("total");
+                    win = resultSet.getInt("win");
+                    lose = resultSet.getInt("lose");
+                    tie = resultSet.getInt("tie");
+                }
+                System.out.println("user: " + player_name + ", total: " + total + ", win: " + win + ", lose: " + lose + ", tie: " + tie);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+        list.getSelectionModel().selectedItemProperty().addListener(e -> {
+            String selected = (String) list.getSelectionModel().selectedItemProperty().getValue();
+            System.out.println("click: " + selected);
+            printStream.println("match:" + selected);
         });
     }
 
@@ -169,6 +217,21 @@ public class Controller implements Initializable {
         player_name = n;
     }
 
+    public void update(String statue) throws SQLException {
+        int total = 0;
+        int change = 0;
+        String sql = "select * from record where name = " + player_name;
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()){
+            total = resultSet.getInt("total") + 1;
+            change = resultSet.getInt(statue) +1 ;
+        }
+        sql = "update record set " + statue + " = " + change + " where name = " + player_name;
+        statement.execute(sql);
+        sql = "update record set total = " + total + " where name = " + player_name;
+        statement.execute(sql);
+    }
+
     public void start() {
         new Thread(() -> {
             try {
@@ -185,7 +248,8 @@ public class Controller implements Initializable {
                             }
                         });
                     } else if (data.equals("0")) {
-                        System.out.println("Wait for your opponent to play");
+//                        System.out.println("Wait for your opponent to play");
+                        System.out.println("waiting");
                     } else if (data.startsWith("position:")) {
                         int x = Integer.parseInt(data.substring(9, 10));
                         int y = Integer.parseInt(data.substring(11, 12));
@@ -211,6 +275,25 @@ public class Controller implements Initializable {
                         Platform.runLater(this::restart);
                         op_click = true;
                         my_turn = false;
+                    } else if (data.contains("tie")) {
+                        System.out.println("game tie");
+                        update("tie");
+                    } else if (data.contains("win")) {
+                        System.out.println("you win!");
+                        update("win");
+                    } else if (data.contains("lose")) {
+                        System.out.println("you lose...");
+                        update("lose");
+                    } else if (data.startsWith("list:")) {
+                        String s = data.substring(5);
+                        String[] tmp_list = s.split(",");
+                        List<String> players = Arrays.asList(tmp_list);
+                        ObservableList<String> obList = FXCollections.observableList(players);
+                        Platform.runLater(() -> {
+                            list.setItems(obList);
+                        });
+                    } else if (data.startsWith("match to")){
+                        System.out.println("opponent: " + data);
                     } else {
                         System.out.println(data);
                     }
@@ -219,6 +302,8 @@ public class Controller implements Initializable {
                 System.out.println("-------------------------");
                 System.out.println("The server shutdown");
                 System.exit(0);
+            } catch (SQLException e){
+                System.out.println(e);
             }
             catch (IOException e) {
                 e.printStackTrace();

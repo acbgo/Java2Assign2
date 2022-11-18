@@ -77,6 +77,8 @@ public class Login implements Initializable {
             statement.execute(sql);
             login_username.setText("");
             login_password.setText("");
+            sql = "insert into record value ('" + user_name +  "', 0, 0, 0, 0);";
+            statement.execute(sql);
         }
 
     }
