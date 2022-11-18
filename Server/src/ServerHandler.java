@@ -15,7 +15,16 @@ public class ServerHandler extends Thread {
     public DataInputStream dataInputStream;
     public PrintStream printStream;
 
+    public String name;
+
+    public int my_number;
+    public int op_number;
+
     public boolean can_match = false;
+
+    int[][] chessBoard = new int[3][3];
+    int winner = -1;
+    boolean game_end = false;
 
     public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches, ConcurrentHashMap<DataInputStream, PrintStream> input_print) {
         if (socket != null) {
@@ -36,13 +45,128 @@ public class ServerHandler extends Thread {
         }
     }
 
+    public void auto_match(){
+        for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
+            Map.Entry entry = (Map.Entry) socketStringEntry;
+            if (entry.getValue().equals("")) {
+                String match_name = (String)entry.getKey();
+                if (name.equals(match_name)){
+                    continue;
+                }
+                matches.put((String) entry.getKey(), name);
+                matches.put(name, (String) entry.getKey());
+                can_match = true;
+            }
+        }
+    }
+    public void send_match_msg() throws IOException {
+        String match_to = matches.get(name);
+        Socket match_socket = clients.get(match_to);
+        PrintStream match_ps = new PrintStream(match_socket.getOutputStream());
+        match_ps.println("match to " + name);
+        printStream.println("match to " + match_to);
+    }
+
+    public void change_board(String data) throws IOException {
+        if (data.startsWith("last")){
+            int x = Integer.parseInt(data.substring(5,6));
+            int y = Integer.parseInt(data.substring(7,8));
+            chessBoard[y][x] = op_number;
+        } else {
+            String opponent = matches.get(name);
+            Socket op_socket = clients.get(opponent);
+            PrintStream op_print = new PrintStream(op_socket.getOutputStream());
+            String msg = "position:" + data.substring(9,12) + "1";
+            int x = Integer.parseInt(data.substring(9,10));
+            int y = Integer.parseInt(data.substring(11,12));
+            chessBoard[y][x] = my_number;
+            op_print.println(msg);
+            printStream.println("1");
+        }
+    }
+    
+    public void send_winner(){
+        if (winner == 0){
+            System.out.println("game tie!");
+            printStream.println("game tie!");
+        } else if (winner == my_number){
+            System.out.println(name + " win!");
+            printStream.println("you win!");
+        } else if (winner == op_number) {
+            printStream.println("you lose...");
+        }
+    }
+
+    public int check_winner(){
+        //first col
+        if (check_triple_equality(chessBoard[0][0],chessBoard[0][1],chessBoard[0][2])){
+            return chessBoard[0][0];
+        }
+        //second col
+        if (check_triple_equality(chessBoard[1][0],chessBoard[1][1],chessBoard[1][2])){
+            return chessBoard[1][0];
+        }
+        //third col
+        if (check_triple_equality(chessBoard[2][0],chessBoard[2][1],chessBoard[2][2])){
+            return chessBoard[2][0];
+        }
+
+        //first row
+        if (check_triple_equality(chessBoard[0][0],chessBoard[1][0],chessBoard[2][0])){
+            return chessBoard[0][0];
+        }
+        //second row
+        if (check_triple_equality(chessBoard[0][1],chessBoard[1][1],chessBoard[2][1])){
+            return chessBoard[0][1];
+        }
+        //third row
+        if (check_triple_equality(chessBoard[0][2],chessBoard[1][2],chessBoard[2][2])){
+            return chessBoard[0][2];
+        }
+
+        //main diagonal
+        if (check_triple_equality(chessBoard[0][0],chessBoard[1][1],chessBoard[2][2])){
+            return chessBoard[0][2];
+        }
+        if (check_triple_equality(chessBoard[2][0],chessBoard[1][1],chessBoard[0][2])){
+            return chessBoard[0][2];
+        }
+        if (is_end() && winner == -1){
+            return 0;
+        }
+        return -1;
+    }
+
+    private boolean check_triple_equality(int p1, int p2, int p3){
+        return (p1 == p2) && (p2 == p3) && (p1 != 0);
+    }
+
+    public boolean is_end(){
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[0].length; j++) {
+                if (chessBoard[i][j] == 0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void print_board(){
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[0].length; j++) {
+                System.out.print(chessBoard[i][j] + ",");
+            }
+            System.out.println();
+        }
+    }
+
     @Override
     public void run() {
         try {
             while (true) {
                 String data = dataInputStream.readLine();
                 System.out.println("receive:" + data);
-                String name = "";
                 if (data.startsWith("name")) {
                     name = data.substring(6);
                     System.out.println("connect to " + name);
@@ -52,26 +176,17 @@ public class ServerHandler extends Thread {
                     clients.put(name, this.socket);
                     if (clients.size()%2 != 0){
                         printStream.println("your turn");
+                        my_number = 2;
+                        op_number = 1;
+                    } else {
+                        printStream.println("0");
+                        my_number = 1;
+                        op_number = 2;
                     }
                     if (clients.size()>1){
-                        for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
-                            Map.Entry entry = (Map.Entry) socketStringEntry;
-                            if (entry.getValue().equals("")) {
-                                String match_name = (String)entry.getKey();
-                                if (name.equals(match_name)){
-                                    continue;
-                                }
-                                matches.put((String) entry.getKey(), name);
-                                matches.put(name, (String) entry.getKey());
-                                can_match = true;
-                            }
-                        }
+                        auto_match();
                         if (can_match){
-                            String match_to = matches.get(name);
-                            Socket match_socket = clients.get(match_to);
-                            PrintStream match_ps = new PrintStream(match_socket.getOutputStream());
-                            match_ps.println("match to " + name);
-                            printStream.println("match to " + match_to);
+                            send_match_msg();
                         } else {
                             matches.put(name, "");
                         }
@@ -79,48 +194,35 @@ public class ServerHandler extends Thread {
                         System.out.println("waiting....");
                         printStream.println("waiting....");
                     }
-                } else if (data.startsWith("position:")) {
+                } else if (data.startsWith("position:") && !game_end) {
                     if (clients.size() == 1) {
                         System.out.println("waiting....");
                         printStream.println("waiting....");
                     } else if (data.endsWith("0")) {
-                        System.out.println("this is not his turn");
+                        String opponent = matches.get(name);
+                        System.out.println("this is " + opponent + "'s turn");
                         printStream.println("0");
                     } else {
-                        String cur_player = data.substring(15, data.length()-1);
-                        String opponent = matches.get(cur_player);
-                        Socket op_socket = clients.get(opponent);
-                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
-                        String msg = "position:" + data.substring(9,12) + "1";
-                        op_print.println(msg);
-                        printStream.println("1");
+                        change_board(data);
+                        print_board();
+                        winner = check_winner();
+                        System.out.println(winner);
+                        if (winner != -1){
+                            game_end = true;
+                            send_winner();
+                        }
                     }
-                } else if (data.startsWith("status")) {
-                    if (data.charAt(7) == '0'){
-                        System.out.println("tie");
-                        printStream.println("tie");
-                        String cur_player = data.substring(8);
-                        String opponent = matches.get(cur_player);
-                        Socket op_socket = clients.get(opponent);
-                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
-                        op_print.println("tie");
-                    } else if (data.charAt(7) == '1') {
-                        String cur_player = data.substring(8);
-                        System.out.println(cur_player + " win!");
-                        printStream.println("you win!");
-                        String opponent = matches.get(cur_player);
-                        Socket op_socket = clients.get(opponent);
-                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
-                        op_print.println("you lose...");
-                    } else if (data.startsWith("-1", 7)) {
-                        String cur_player = data.substring(8);
-                        String opponent = matches.get(cur_player);
-                        System.out.println(opponent + " win!");
-                        printStream.println("you lose...");
-                        Socket op_socket = clients.get(opponent);
-                        PrintStream op_print = new PrintStream(op_socket.getOutputStream());
-                        op_print.println("you win!");
+                } else if (data.startsWith("last") && !game_end) {
+                    change_board(data);
+                    winner = check_winner();
+                    System.out.println(winner);
+                    if (winner != -1){
+                        game_end = true;
+                        send_winner();
                     }
+                } else if (game_end) {
+                    System.out.println("The game is over");
+                    printStream.println("The game is over.");
                 }
             }
         } catch (Exception e) {
