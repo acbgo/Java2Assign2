@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4af548b8-f223-4b3d-b29d-8e89d1a4030f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../tic_tac_toe_maven/Client/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tic_tac_toe_maven/Server/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/Assignment2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Assignment2/out/production/Assignment2/application/controller/Controller.class" beforeDir="false" />
@@ -69,11 +67,16 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "1.8",
-    "last_opened_file_path": "E:/OneDrive - 南方科技大学/code/CS209_Java2/assignments/tic_tac_toe/Server/src",
+    "last_opened_file_path": "E:/OneDrive - 南方科技大学/code/CS209_Java2/assignments/tic_tac_toe",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -126,6 +129,8 @@
       <workItem from="1668579094013" duration="5776000" />
       <workItem from="1668611128350" duration="621000" />
       <workItem from="1668657857903" duration="34177000" />
+      <workItem from="1668774521725" duration="379000" />
+      <workItem from="1668774957548" duration="2665000" />
     </task>
     <servers />
   </component>

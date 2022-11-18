@@ -13,19 +13,12 @@ public class MainApp extends Application {
             fxmlLoader.setLocation(getClass().getClassLoader().getResource("login.fxml"));
             stage.setTitle("Login page");
             Pane root = fxmlLoader.load();
-//            Controller controller = fxmlLoader.getController();
-//            Client client = new Client(controller);
-//            stage.setTitle("Tic Tac Toe Server" + client.name);
             stage.setScene(new Scene(root));
             stage.setResizable(false);
             stage.show();
         } catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    public void goto_main(){
-
     }
 
     public static void main(String[] args) {

@@ -18,7 +18,7 @@ public class Client {
 
     public Client(Controller controller) {
         this.controller = controller;
-        name = "client" + r.nextInt(10000);
+        name = controller.player_name;
         StartConnection();
     }
 
