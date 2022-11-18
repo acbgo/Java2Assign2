@@ -27,6 +27,7 @@ public class ServerHandler extends Thread {
     int[][] chessBoard = new int[3][3];
     int winner = -1;
     boolean game_end = false;
+    boolean have_restart = false;
 
     public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches, ConcurrentHashMap<DataInputStream, PrintStream> input_print) {
         if (socket != null) {
@@ -74,6 +75,9 @@ public class ServerHandler extends Thread {
     }
 
     public void change_board(String data) throws IOException {
+        if (have_restart){
+            have_restart = false;
+        }
         if (data.startsWith("last")){
             int x = Integer.parseInt(data.substring(5,6));
             int y = Integer.parseInt(data.substring(7,8));
@@ -167,6 +171,40 @@ public class ServerHandler extends Thread {
         }
     }
 
+    public void restart(){
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[0].length; j++) {
+                chessBoard[i][j] = 0;
+            }
+        }
+        winner = -1;
+        game_end = false;
+    }
+
+    public void inform_opponent(String msg){
+        if (!op_name.equals("")){
+            if (!msg.equals("op_restart")){
+                matches.put(op_name,"");
+            }
+            Socket op_socket = clients.get(op_name);
+            System.out.println(op_name);
+            PrintStream op_ps = null;
+            try {
+                op_ps = new PrintStream(op_socket.getOutputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            op_ps.println(msg);
+            if (!msg.equals("op_restart")){
+                op_ps.println("op_shutdown");
+            }
+            System.out.println(matches);
+        } else {
+            System.out.println(name + " has not been matched");
+            System.out.println(matches);
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -230,6 +268,20 @@ public class ServerHandler extends Thread {
                     op_name = data.substring(8);
                 } else if (data.equals("op_shutdown")) {
                     op_name = "";
+                } else if (data.equals("restart")) {
+                    if (!have_restart){
+                        have_restart = true;
+                        restart();
+                        System.out.println(name);
+                        print_board();
+                        inform_opponent("op_restart");
+                    }
+
+                } else if (data.equals("op_restart")) {
+                    have_restart = true;
+                    restart();
+                    System.out.println(name);
+                    print_board();
                 } else if (game_end) {
                     System.out.println("The game is over");
                     printStream.println("The game is over.");
@@ -240,25 +292,7 @@ public class ServerHandler extends Thread {
             String msg = "Your opponent dropped out unexpectedly";
             clients.remove(name);
             matches.remove(name);
-            if (!op_name.equals("")){
-                matches.put(op_name,"");
-            }
-            if (!op_name.equals("")){
-                Socket op_socket = clients.get(op_name);
-                System.out.println(op_name);
-                PrintStream op_ps = null;
-                try {
-                    op_ps = new PrintStream(op_socket.getOutputStream());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                op_ps.println(msg);
-                op_ps.println("op_shutdown");
-                System.out.println(matches);
-            } else {
-                System.out.println(name + " has not been matched");
-                System.out.println(matches);
-            }
+            inform_opponent(msg);
         } catch (Exception e) {
             System.out.println("--------------------------------");
             throw new RuntimeException(e);

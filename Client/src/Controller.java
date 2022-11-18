@@ -1,6 +1,8 @@
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -13,6 +15,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +28,6 @@ public class Controller implements Initializable {
     private static final int OFFSET = 15;
 
     int which_player = 0;
-    int win_player = -1;
     public boolean my_turn = false;
 
     private Socket socket;
@@ -40,14 +42,21 @@ public class Controller implements Initializable {
     @FXML
     private Rectangle game_panel;
 
+    @FXML
+    private Button button;
+
     //ture -> circle; false -> line
     private static boolean TURN = false;
+    public boolean op_click = false;
 
     private static final int[][] chessBoard = new int[3][3];
     private static final boolean[][] flag = new boolean[3][3];
 
+    public ArrayList<Node> nodes = new ArrayList<>();
+
     public int x_axis;
     public int y_axis;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,8 +66,33 @@ public class Controller implements Initializable {
             String msg = "position:" + x_axis + "," + y_axis + "by " + player_name + (my_turn ? 1 : 0);
             printStream.println(msg);
         });
+        button.setOnMouseClicked(mouseEvent -> {
+            restart();
+        });
     }
 
+    public void restart(){
+        TURN = !TURN;
+        System.out.println("click restart");
+        for (int i = 0; i < chessBoard.length; i++) {
+            for (int j = 0; j < chessBoard[0].length; j++) {
+                chessBoard[i][j] = EMPTY;
+                flag[i][j] = false;
+            }
+        }
+        for (Node node : nodes){
+            base_square.getChildren().remove(node);
+        }
+        if (which_player == 2){
+            my_turn = true;
+        }
+        if (!op_click){
+            printStream.println("restart");
+        } else {
+            printStream.println("op_restart");
+            op_click = false;
+        }
+    }
 
     private boolean refreshBoard(int x, int y) {
         if (chessBoard[x][y] == EMPTY) {
@@ -96,6 +130,7 @@ public class Controller implements Initializable {
     private void drawCircle(int i, int j) {
         Circle circle = new Circle();
         base_square.getChildren().add(circle);
+        nodes.add(circle);
         circle.setCenterX(i * BOUND + BOUND / 2.0 + OFFSET);
         circle.setCenterY(j * BOUND + BOUND / 2.0 + OFFSET);
         circle.setRadius(BOUND / 2.0 - OFFSET / 2.0);
@@ -109,6 +144,8 @@ public class Controller implements Initializable {
         Line line_b = new Line();
         base_square.getChildren().add(line_a);
         base_square.getChildren().add(line_b);
+        nodes.add(line_a);
+        nodes.add(line_b);
         line_a.setStartX(i * BOUND + OFFSET * 1.5);
         line_a.setStartY(j * BOUND + OFFSET * 1.5);
         line_a.setEndX((i + 1) * BOUND + OFFSET * 0.5);
@@ -171,6 +208,9 @@ public class Controller implements Initializable {
                         printStream.println(data);
                     } else if (data.equals("op_shutdown")) {
                         printStream.println(data);
+                    } else if (data.equals("op_restart")) {
+                        Platform.runLater(this::restart);
+                        op_click = true;
                     } else {
                         System.out.println(data);
                     }
