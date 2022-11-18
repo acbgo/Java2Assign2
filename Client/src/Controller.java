@@ -11,6 +11,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -166,11 +167,20 @@ public class Controller implements Initializable {
                         my_turn = true;
                         TURN = false;
                         which_player = 2;
+                    } else if (data.startsWith("op_name:")) {
+                        printStream.println(data);
+                    } else if (data.equals("op_shutdown")) {
+                        printStream.println(data);
                     } else {
                         System.out.println(data);
                     }
                 }
-            } catch (IOException e) {
+            } catch (SocketException sc){
+                System.out.println("-------------------------");
+                System.out.println("The server shutdown");
+                System.exit(0);
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();

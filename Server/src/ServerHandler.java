@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,7 @@ public class ServerHandler extends Thread {
     public PrintStream printStream;
 
     public String name;
+    public String op_name = "";
 
     public int my_number;
     public int op_number;
@@ -45,7 +47,7 @@ public class ServerHandler extends Thread {
         }
     }
 
-    public void auto_match(){
+    public void auto_match() throws IOException {
         for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
             Map.Entry entry = (Map.Entry) socketStringEntry;
             if (entry.getValue().equals("")) {
@@ -53,9 +55,13 @@ public class ServerHandler extends Thread {
                 if (name.equals(match_name)){
                     continue;
                 }
-                matches.put((String) entry.getKey(), name);
-                matches.put(name, (String) entry.getKey());
+                op_name = (String) entry.getKey();
+                matches.put(op_name, name);
+                matches.put(name, op_name);
                 can_match = true;
+                Socket op_socket = clients.get(op_name);
+                PrintStream op_ps = new PrintStream(op_socket.getOutputStream());
+                op_ps.println("op_name:" + name);
             }
         }
     }
@@ -220,12 +226,41 @@ public class ServerHandler extends Thread {
                         game_end = true;
                         send_winner();
                     }
+                } else if (data.startsWith("op_name:")) {
+                    op_name = data.substring(8);
+                } else if (data.equals("op_shutdown")) {
+                    op_name = "";
                 } else if (game_end) {
                     System.out.println("The game is over");
                     printStream.println("The game is over.");
                 }
             }
+        } catch (SocketException socketException){
+            System.out.println("client" + name + "shutdown");
+            String msg = "Your opponent dropped out unexpectedly";
+            clients.remove(name);
+            matches.remove(name);
+            if (!op_name.equals("")){
+                matches.put(op_name,"");
+            }
+            if (!op_name.equals("")){
+                Socket op_socket = clients.get(op_name);
+                System.out.println(op_name);
+                PrintStream op_ps = null;
+                try {
+                    op_ps = new PrintStream(op_socket.getOutputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                op_ps.println(msg);
+                op_ps.println("op_shutdown");
+                System.out.println(matches);
+            } else {
+                System.out.println(name + " has not been matched");
+                System.out.println(matches);
+            }
         } catch (Exception e) {
+            System.out.println("--------------------------------");
             throw new RuntimeException(e);
         }
     }
