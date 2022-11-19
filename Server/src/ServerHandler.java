@@ -217,6 +217,16 @@ public class ServerHandler extends Thread {
         printStream.println(msg);
     }
 
+    public void update_others() throws IOException {
+        for (String s : clients.keySet()){
+            if (!s.equals(name)){
+                Socket socket1 = clients.get(s);
+                PrintStream printStream1 = new PrintStream(socket1.getOutputStream());
+                printStream1.println("update list");
+            }
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -226,10 +236,9 @@ public class ServerHandler extends Thread {
                 if (data.startsWith("name")) {
                     name = data.substring(6);
                     System.out.println("connect to " + name);
-                    if (clients.size() == 0) {
-                        matches.put(name, "");
-                    }
+                    matches.put(name, "");
                     clients.put(name, this.socket);
+                    update_others();
                     if (clients.size()%2 != 0){
                         printStream.println("your turn");
                         my_number = 2;
@@ -299,6 +308,8 @@ public class ServerHandler extends Thread {
                     } else {
                         matches.put(name, "");
                     }
+                } else if (data.equals("update list")) {
+                    update();
                 } else if (game_end) {
                     System.out.println("The game is over");
                     printStream.println("The game is over.");
@@ -309,6 +320,11 @@ public class ServerHandler extends Thread {
             String msg = "Your opponent dropped out unexpectedly";
             clients.remove(name);
             matches.remove(name);
+            try {
+                update_others();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             inform_opponent(msg);
         } catch (Exception e) {
             System.out.println("--------------------------------");

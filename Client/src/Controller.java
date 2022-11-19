@@ -294,6 +294,8 @@ public class Controller implements Initializable {
                         });
                     } else if (data.startsWith("match to")){
                         System.out.println("opponent: " + data);
+                    } else if (data.equals("update list")) {
+                        printStream.println(data);
                     } else {
                         System.out.println(data);
                     }
