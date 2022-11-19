@@ -733,40 +733,64 @@
       <Current>1</Current>
       <CollationName>latin1_swedish_ci</CollationName>
     </schema>
-    <table id="230" parent="229" name="record">
+    <table id="230" parent="229" name="game_on">
       <Engine>InnoDB</Engine>
       <CollationName>latin1_swedish_ci</CollationName>
     </table>
-    <table id="231" parent="229" name="users">
+    <table id="231" parent="229" name="record">
       <Engine>InnoDB</Engine>
       <CollationName>latin1_swedish_ci</CollationName>
     </table>
-    <column id="232" parent="230" name="name">
+    <table id="232" parent="229" name="users">
+      <Engine>InnoDB</Engine>
+      <CollationName>latin1_swedish_ci</CollationName>
+    </table>
+    <column id="233" parent="230" name="name">
       <DataType>varchar(10)|0s</DataType>
       <Position>1</Position>
     </column>
-    <column id="233" parent="230" name="total">
-      <DataType>int(11)|0s</DataType>
+    <column id="234" parent="230" name="op_name">
+      <DataType>varchar(10)|0s</DataType>
       <Position>2</Position>
     </column>
-    <column id="234" parent="230" name="win">
+    <column id="235" parent="230" name="my_num">
       <DataType>int(11)|0s</DataType>
       <Position>3</Position>
     </column>
-    <column id="235" parent="230" name="lose">
+    <column id="236" parent="230" name="my_turn">
       <DataType>int(11)|0s</DataType>
       <Position>4</Position>
     </column>
-    <column id="236" parent="230" name="tie">
+    <column id="237" parent="230" name="board">
+      <DataType>varchar(20)|0s</DataType>
+      <Position>5</Position>
+    </column>
+    <column id="238" parent="231" name="name">
+      <DataType>varchar(10)|0s</DataType>
+      <Position>1</Position>
+    </column>
+    <column id="239" parent="231" name="total">
+      <DataType>int(11)|0s</DataType>
+      <Position>2</Position>
+    </column>
+    <column id="240" parent="231" name="win">
+      <DataType>int(11)|0s</DataType>
+      <Position>3</Position>
+    </column>
+    <column id="241" parent="231" name="lose">
+      <DataType>int(11)|0s</DataType>
+      <Position>4</Position>
+    </column>
+    <column id="242" parent="231" name="tie">
       <DataType>int(11)|0s</DataType>
       <Position>5</Position>
     </column>
-    <column id="237" parent="231" name="name">
+    <column id="243" parent="232" name="name">
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="238" parent="231" name="password">
+    <column id="244" parent="232" name="password">
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>

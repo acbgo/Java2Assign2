@@ -69,6 +69,8 @@ public class Controller implements Initializable {
     public int x_axis;
     public int y_axis;
 
+    public boolean is_reconnect = false;
+
     Statement statement;
     Connection con;
     {
@@ -247,18 +249,37 @@ public class Controller implements Initializable {
                                 System.out.println("this not your turn");
                             }
                         });
-                    } else if (data.equals("0")) {
-//                        System.out.println("Wait for your opponent to play");
-                        System.out.println("waiting");
+                    } else if (data.equals("0") || data.equals("waiting....")) {
+                        System.out.println("waiting....");
+                    } else if (data.startsWith("0")) {
+                        System.out.println("Wait for your opponent " + data.substring(1) +  " to play");
+                    } else if (data.equals("reconnect your turn")) {
+                        System.out.println("reconnect my turn");
+                        my_turn = true;
+                        TURN = false;
+                    } else if (data.equals("reconnect not your turn")) {
+                        System.out.println("reconnect not my turn");
+                        my_turn = false;
+                        TURN = true;
+                    } else if (data.contains("reconnect my number")) {
+                        which_player = Integer.parseInt(data.substring(data.length()-1));
                     } else if (data.startsWith("position:")) {
                         int x = Integer.parseInt(data.substring(9, 10));
                         int y = Integer.parseInt(data.substring(11, 12));
                         if (data.endsWith("1")) {
-                            my_turn = true;
-                            Platform.runLater(() -> {
-                                refreshBoard(x, y);
-                                TURN = !TURN;
-                            });
+                            if (is_reconnect){
+                                Platform.runLater(() -> {
+                                    refreshBoard(x, y);
+                                    TURN = !TURN;
+                                });
+
+                            } else {
+                                my_turn = true;
+                                Platform.runLater(() -> {
+                                    refreshBoard(x, y);
+                                    TURN = !TURN;
+                                });
+                            }
                             String msg = "last:" + x + "," + y;
                             printStream.println(msg);
                         }
@@ -270,7 +291,7 @@ public class Controller implements Initializable {
                         printStream.println(data);
                     } else if (data.equals("op_shutdown")) {
                         printStream.println(data);
-                        System.exit(0);
+//                        System.exit(0);
                     } else if (data.equals("op_restart")) {
                         Platform.runLater(this::restart);
                         op_click = true;
@@ -296,7 +317,21 @@ public class Controller implements Initializable {
                         System.out.println("opponent: " + data);
                     } else if (data.equals("update list")) {
                         printStream.println(data);
-                    } else {
+                    } else if (data.contains("dropped out")) {
+                        System.out.println(data + ", please wait for a while...");
+                    } else if (data.startsWith("board:")) {
+                        printStream.println(data);
+                        String board = data.substring(6);
+                        String[] boards = board.split(",");
+                        for (int i = 0; i < chessBoard.length; i++) {
+                            for (int j = 0; j < chessBoard[0].length; j++) {
+                                int index = i*3  + j;
+                                chessBoard[j][i] = Integer.parseInt(boards[index]);
+                            }
+                        }
+                        Platform.runLater(this::drawChess);
+                    } else{
+                        System.out.println("not handle data:");
                         System.out.println(data);
                     }
                 }
