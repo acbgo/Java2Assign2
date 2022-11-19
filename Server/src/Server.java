@@ -11,6 +11,7 @@ public class Server {
     public ConcurrentHashMap<String, Socket> clients = new ConcurrentHashMap<>();
     public ConcurrentHashMap<String, String> matches = new ConcurrentHashMap<>();
     public ConcurrentHashMap<DataInputStream, PrintStream> input_print = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<String, Boolean> waiting = new ConcurrentHashMap<>();
     public Server() {
         startConnection();
     }
@@ -23,7 +24,7 @@ public class Server {
                 try {
                     while (true){
                         Socket socket = myServerSocket.accept();
-                        new ServerHandler(socket, clients,matches,input_print);
+                        new ServerHandler(socket, clients,matches,input_print,waiting);
                         Thread.sleep(500);
                         System.out.println(clients);
                         System.out.println(matches);

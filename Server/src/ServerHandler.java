@@ -11,6 +11,7 @@ public class ServerHandler extends Thread {
     public ConcurrentHashMap<String, Socket> clients;
     public ConcurrentHashMap<String, String> matches;
     public ConcurrentHashMap<DataInputStream, PrintStream> input_print;
+    ConcurrentHashMap<String, Boolean> waiting;
     public DataInputStream dataInputStream;
     public PrintStream printStream;
 
@@ -27,7 +28,7 @@ public class ServerHandler extends Thread {
     boolean game_end = false;
     boolean have_restart = false;
 
-    public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches, ConcurrentHashMap<DataInputStream, PrintStream> input_print) {
+    public ServerHandler(Socket socket, ConcurrentHashMap<String, Socket> clients, ConcurrentHashMap<String, String> matches, ConcurrentHashMap<DataInputStream, PrintStream> input_print, ConcurrentHashMap<String, Boolean> waiting) {
         if (socket != null) {
             System.out.println("new client connected");
             try {
@@ -35,6 +36,7 @@ public class ServerHandler extends Thread {
                 this.clients = clients;
                 this.matches = matches;
                 this.input_print = input_print;
+                this.waiting = waiting;
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 printStream = new PrintStream(socket.getOutputStream());
                 input_print.put(dataInputStream, printStream);
@@ -208,11 +210,13 @@ public class ServerHandler extends Thread {
     public void update(){
         String msg = "list:";
         for (String s : clients.keySet()){
-            if (!s.equals(name)){
+            if (!s.equals(name) && waiting.get(s)){
                 msg += s + ",";
             }
         }
-        msg = msg.substring(0, msg.length()-1);
+        if (msg.endsWith(",")){
+            msg = msg.substring(0, msg.length()-1);
+        }
         System.out.println(msg);
         printStream.println(msg);
     }
@@ -238,6 +242,7 @@ public class ServerHandler extends Thread {
                     System.out.println("connect to " + name);
                     matches.put(name, "");
                     clients.put(name, this.socket);
+                    waiting.put(name, true);
                     update_others();
                     if (clients.size()%2 != 0){
                         printStream.println("your turn");
@@ -304,7 +309,12 @@ public class ServerHandler extends Thread {
                     System.out.println(clients);
                     match();
                     if (can_match){
+                        waiting.put(name, false);
+                        waiting.put(op_name, false);
                         send_match_msg();
+                        can_match = false;
+                        update_others();
+//                        update();
                     } else {
                         matches.put(name, "");
                     }
