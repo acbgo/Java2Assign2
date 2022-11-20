@@ -1,6 +1,4 @@
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -91,13 +89,11 @@ public class Controller implements Initializable {
             String msg = "position:" + x_axis + "," + y_axis + "by " + player_name + (my_turn ? 1 : 0);
             printStream.println(msg);
         });
-        button.setOnMouseClicked(mouseEvent -> {
-            restart();
-        });
+        button.setOnMouseClicked(mouseEvent -> restart());
         history.setOnMouseClicked(mouseEvent -> {
             int total = 0, win = 0, lose = 0, tie = 0;
             String sql = "select * from record where name = " + player_name;
-            ResultSet resultSet = null;
+            ResultSet resultSet;
             try {
                 resultSet = statement.executeQuery(sql);
                 while (resultSet.next()){
@@ -310,9 +306,7 @@ public class Controller implements Initializable {
                         String[] tmp_list = s.split(",");
                         List<String> players = Arrays.asList(tmp_list);
                         ObservableList<String> obList = FXCollections.observableList(players);
-                        Platform.runLater(() -> {
-                            list.setItems(obList);
-                        });
+                        Platform.runLater(() -> list.setItems(obList));
                     } else if (data.startsWith("match to")){
                         System.out.println("opponent: " + data);
                     } else if (data.equals("update list")) {

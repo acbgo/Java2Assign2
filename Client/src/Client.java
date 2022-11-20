@@ -2,11 +2,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Random;
 
 public class Client {
 
-    Random r = new Random();
     public Socket socket;
     public DataInputStream dataInputStream;
     public PrintStream printStream;

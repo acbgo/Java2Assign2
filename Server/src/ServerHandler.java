@@ -70,17 +70,6 @@ public class ServerHandler extends Thread {
         System.out.println(op_name);
         PrintStream op_ps = new PrintStream(op_socket.getOutputStream());
         op_ps.println("op_name:" + name);
-
-//        for (Map.Entry<String, String> socketStringEntry : matches.entrySet()) {
-//            Map.Entry entry = (Map.Entry) socketStringEntry;
-//            if (entry.getValue().equals("")) {
-//                String match_name = (String)entry.getKey();
-//                if (name.equals(match_name)){
-//                    continue;
-//                }
-//                op_name = (String) entry.getKey();
-//            }
-//        }
     }
 
     public void send_match_msg() throws IOException {
@@ -169,9 +158,9 @@ public class ServerHandler extends Thread {
     }
 
     public boolean is_end() {
-        for (int i = 0; i < chessBoard.length; i++) {
+        for (int[] ints : chessBoard) {
             for (int j = 0; j < chessBoard[0].length; j++) {
-                if (chessBoard[i][j] == 0) {
+                if (ints[j] == 0) {
                     return false;
                 }
             }
@@ -180,9 +169,9 @@ public class ServerHandler extends Thread {
     }
 
     public void print_board() {
-        for (int i = 0; i < chessBoard.length; i++) {
+        for (int[] ints : chessBoard) {
             for (int j = 0; j < chessBoard[0].length; j++) {
-                System.out.print(chessBoard[i][j] + ",");
+                System.out.print(ints[j] + ",");
             }
             System.out.println();
         }
@@ -201,12 +190,11 @@ public class ServerHandler extends Thread {
     public int is_my_turn(){
         int my_chess = 0;
         int op_chess = 0;
-        for (int i = 0; i < chessBoard.length; i++) {
+        for (int[] ints : chessBoard) {
             for (int j = 0; j < chessBoard[0].length; j++) {
-                if (chessBoard[i][j] == my_number) {
+                if (ints[j] == my_number) {
                     my_chess++;
-                }
-                else if (chessBoard[i][j] == op_number) {
+                } else if (ints[j] == op_number) {
                     op_chess++;
                 }
             }
@@ -225,7 +213,7 @@ public class ServerHandler extends Thread {
             }
             Socket op_socket = clients.get(op_name);
             System.out.println(op_name);
-            PrintStream op_ps = null;
+            PrintStream op_ps;
             try {
                 op_ps = new PrintStream(op_socket.getOutputStream());
             } catch (IOException e) {
@@ -268,9 +256,9 @@ public class ServerHandler extends Thread {
 
     public String buildBoardStr(){
         String str = "";
-        for (int i = 0; i < chessBoard.length; i++) {
+        for (int[] ints : chessBoard) {
             for (int j = 0; j < chessBoard[0].length; j++) {
-                str += chessBoard[i][j] + ",";
+                str += ints[j] + ",";
             }
         }
         if (str.endsWith(",")){

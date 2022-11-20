@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.sql.*;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Login implements Initializable {
@@ -23,7 +22,6 @@ public class Login implements Initializable {
         }
     }
 
-    private static final Logger logger = Logger.getLogger(Login.class.getName());
     @FXML
     private TextField login_username;
 
