@@ -33,11 +33,12 @@ public class ServerHandler extends Thread {
 
     Statement statement;
     Connection con;
+
     {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tic_tac_toe?characterEncoding=UTF8&autoReconnect=true&useSSL=false");
             statement = con.createStatement();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -187,7 +188,7 @@ public class ServerHandler extends Thread {
         game_end = false;
     }
 
-    public int is_my_turn(){
+    public int is_my_turn() {
         int my_chess = 0;
         int op_chess = 0;
         for (int[] ints : chessBoard) {
@@ -199,7 +200,7 @@ public class ServerHandler extends Thread {
                 }
             }
         }
-        if (my_chess > op_chess){
+        if (my_chess > op_chess) {
             return 0;
         } else {
             return 1;
@@ -254,15 +255,15 @@ public class ServerHandler extends Thread {
         }
     }
 
-    public String buildBoardStr(){
+    public String buildBoardStr() {
         String str = "";
         for (int[] ints : chessBoard) {
             for (int j = 0; j < chessBoard[0].length; j++) {
                 str += ints[j] + ",";
             }
         }
-        if (str.endsWith(",")){
-            str = str.substring(0, str.length()-1);
+        if (str.endsWith(",")) {
+            str = str.substring(0, str.length() - 1);
         }
         return str;
     }
@@ -278,18 +279,18 @@ public class ServerHandler extends Thread {
                     System.out.println("connect to " + name);
                     String sql = "select * from game_on where name = '" + name + "';";
                     ResultSet resultSet = statement.executeQuery(sql);
-                    if (resultSet.next()){
+                    if (resultSet.next()) {
                         op_name = resultSet.getString("op_name");
                         my_number = resultSet.getInt("my_num");
                         int my_turn = resultSet.getInt("my_turn");
                         String board = resultSet.getString("board");
                         System.out.println(name + " has an unfinished game, reconnecting...");
-                        if (my_number == 1){
+                        if (my_number == 1) {
                             op_number = 2;
                         } else if (my_number == 2) {
                             op_number = 1;
                         }
-                        if (my_turn == 1){
+                        if (my_turn == 1) {
                             printStream.println("reconnect your turn");
                         } else if (my_turn == 0) {
                             printStream.println("reconnect not your turn");
@@ -331,7 +332,7 @@ public class ServerHandler extends Thread {
                     String[] boards = board.split(",");
                     for (int i = 0; i < chessBoard.length; i++) {
                         for (int j = 0; j < chessBoard[0].length; j++) {
-                            int index = i*3  + j;
+                            int index = i * 3 + j;
                             chessBoard[i][j] = Integer.parseInt(boards[index]);
                         }
                     }
@@ -344,7 +345,7 @@ public class ServerHandler extends Thread {
                     } else if (data.endsWith("0")) {
                         String opponent = matches.get(name);
                         System.out.println("this is " + opponent + "'s turn");
-                        printStream.println("0"+op_name);
+                        printStream.println("0" + op_name);
                     } else {
                         change_board(data);
                         print_board();
@@ -405,10 +406,10 @@ public class ServerHandler extends Thread {
         } catch (SocketException socketException) {
             System.out.println("client" + name + "shutdown");
             String msg = "Your opponent dropped out unexpectedly";
-            if (!game_end){
+            if (!game_end) {
                 my_turn = is_my_turn();
                 String board = buildBoardStr();
-                String sql = "insert into game_on value ('" + name +"', '" + op_name + "', " + my_number + ", " + my_turn + ", '" + board + "');";
+                String sql = "insert into game_on value ('" + name + "', '" + op_name + "', " + my_number + ", " + my_turn + ", '" + board + "');";
                 try {
                     statement.execute(sql);
                 } catch (SQLException e) {

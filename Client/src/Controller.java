@@ -71,11 +71,12 @@ public class Controller implements Initializable {
 
     Statement statement;
     Connection con;
+
     {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tic_tac_toe?characterEncoding=UTF8&autoReconnect=true&useSSL=false");
             statement = con.createStatement();
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -96,7 +97,7 @@ public class Controller implements Initializable {
             ResultSet resultSet;
             try {
                 resultSet = statement.executeQuery(sql);
-                while (resultSet.next()){
+                while (resultSet.next()) {
                     total = resultSet.getInt("total");
                     win = resultSet.getInt("win");
                     lose = resultSet.getInt("lose");
@@ -115,7 +116,7 @@ public class Controller implements Initializable {
         });
     }
 
-    public void restart(){
+    public void restart() {
         TURN = false;
         System.out.println("click restart");
         for (int i = 0; i < chessBoard.length; i++) {
@@ -124,13 +125,13 @@ public class Controller implements Initializable {
                 flag[i][j] = false;
             }
         }
-        for (Node node : nodes){
+        for (Node node : nodes) {
             base_square.getChildren().remove(node);
         }
-        if (which_player == 2){
+        if (which_player == 2) {
             my_turn = true;
         }
-        if (!op_click){
+        if (!op_click) {
             printStream.println("restart");
         } else {
             printStream.println("op_restart");
@@ -220,9 +221,9 @@ public class Controller implements Initializable {
         int change = 0;
         String sql = "select * from record where name = " + player_name;
         ResultSet resultSet = statement.executeQuery(sql);
-        while (resultSet.next()){
+        while (resultSet.next()) {
             total = resultSet.getInt("total") + 1;
-            change = resultSet.getInt(statue) +1 ;
+            change = resultSet.getInt(statue) + 1;
         }
         sql = "update record set " + statue + " = " + change + " where name = " + player_name;
         statement.execute(sql);
@@ -248,7 +249,7 @@ public class Controller implements Initializable {
                     } else if (data.equals("0") || data.equals("waiting....")) {
                         System.out.println("waiting....");
                     } else if (data.startsWith("0")) {
-                        System.out.println("Wait for your opponent " + data.substring(1) +  " to play");
+                        System.out.println("Wait for your opponent " + data.substring(1) + " to play");
                     } else if (data.equals("reconnect your turn")) {
                         System.out.println("reconnect my turn");
                         my_turn = true;
@@ -258,12 +259,12 @@ public class Controller implements Initializable {
                         my_turn = false;
                         TURN = true;
                     } else if (data.contains("reconnect my number")) {
-                        which_player = Integer.parseInt(data.substring(data.length()-1));
+                        which_player = Integer.parseInt(data.substring(data.length() - 1));
                     } else if (data.startsWith("position:")) {
                         int x = Integer.parseInt(data.substring(9, 10));
                         int y = Integer.parseInt(data.substring(11, 12));
                         if (data.endsWith("1")) {
-                            if (is_reconnect){
+                            if (is_reconnect) {
                                 Platform.runLater(() -> {
                                     refreshBoard(x, y);
                                     TURN = !TURN;
@@ -307,7 +308,7 @@ public class Controller implements Initializable {
                         List<String> players = Arrays.asList(tmp_list);
                         ObservableList<String> obList = FXCollections.observableList(players);
                         Platform.runLater(() -> list.setItems(obList));
-                    } else if (data.startsWith("match to")){
+                    } else if (data.startsWith("match to")) {
                         System.out.println("opponent: " + data);
                     } else if (data.equals("update list")) {
                         printStream.println(data);
@@ -319,24 +320,23 @@ public class Controller implements Initializable {
                         String[] boards = board.split(",");
                         for (int i = 0; i < chessBoard.length; i++) {
                             for (int j = 0; j < chessBoard[0].length; j++) {
-                                int index = i*3  + j;
+                                int index = i * 3 + j;
                                 chessBoard[j][i] = Integer.parseInt(boards[index]);
                             }
                         }
                         Platform.runLater(this::drawChess);
-                    } else{
+                    } else {
                         System.out.println("not handle data:");
                         System.out.println(data);
                     }
                 }
-            } catch (SocketException sc){
+            } catch (SocketException sc) {
                 System.out.println("-------------------------");
                 System.out.println("The server shutdown");
                 System.exit(0);
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 System.out.println(e);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
